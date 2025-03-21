@@ -1,5 +1,5 @@
 #include "stack.h"
-#include <stdio.h>
+#include <stdbool.h>
 #include <stdlib.h>
 
 //Crea una nueva pila vacía y la devuelve.
@@ -28,7 +28,7 @@ Data stack_pop(Stack* s){
 }
 
 //Verifica si la pila está vacía.
-int stack_is_empty(Stack* s){
+bool stack_is_empty(Stack* s){
     return s->top == -1;
 }
 
