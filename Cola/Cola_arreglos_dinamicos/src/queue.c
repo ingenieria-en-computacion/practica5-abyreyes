@@ -1,83 +1,81 @@
 #include "queue.h"
 #include <stdlib.h>
 
-/**
- * Crea una nueva cola vacía y la devuelve.
- * 
- * @param len cantidad de datos que se pueden guardar en el arreglo para la cola
- * @return Una nueva cola vacía. Si la creación falla, el estado de la cola es inválido.
- * @details Esta función inicializa una cola vacía. Asigna memoria dinàmica con malloc al arreglo data usando len
- */
+struct Queue {
+    int *data;   
+    int front;   
+    int rear;    
+    int len;  
+};
+
+//Crea una nueva cola vacía y la devuelve.
 Queue queue_create(int len){
+    Queue *q = (Queue*)malloc(sizeof(Queue));
+    if (!q) {
+        return NULL;
+    }
+    q->data = (int*)malloc(sizeof(int) * len); 
+    if (!q->data) {
+        free(q);
+        return NULL;
+    }
+    q->front = -1;
+    q->rear = -1;
+    q->len = len;
+    return q;
+} 
 
+//Inserta un elemento al final de la cola.
+void queue_enqueue(Queue* q, int d) {
+    if (q->rear == q->len - 1) {
+        // La cola está llena
+        return;
+    }
+    if (q->front == -1) {
+        q->front = 0; // Si la cola estaba vacía, se coloca el primer elemento
+    }
+    q->rear++;
+    q->data[q->rear] = d; // Insertar el dato en el final de la cola
 }
 
-/**
- * Inserta un elemento al final de la cola.
- * 
- * @param q Referencia a la cola donde se insertará el elemento.
- * @param d Dato que se insertará en la cola.
- * @details Esta función añade el dato `d` al final de la cola.
- */
-void queue_enqueue(Queue* q, Data d){
-
-}
-
-/**
- * Elimina y devuelve el elemento al frente de la cola.
- * 
- * @param q Referencia a la cola de la cual se eliminará el elemento.
- * @return El dato que estaba al frente de la cola. Si la cola está vacía o el puntero
- *         `q` es NULL, devuelve un valor que indica error (por ejemplo, un valor predeterminado).
- * @details Esta función elimina el elemento al frente de la cola y lo devuelve.
- *          Si la cola está vacía, no se realiza ninguna operación y se devuelve un valor de error.
- */
+//Elimina y devuelve el elemento al frente de la cola.
 Data queue_dequeue(Queue* q){
-
+  if (q->front == -1) {
+        // La cola está vacía
+        return -1; // Valor de error
+    }
+    int data = q->data[q->front];
+    q->front++;
+    if (q->front > q->rear) {
+        // La cola quedó vacía
+        q->front = q->rear = -1;
+    }
+    return data;
 }
 
-/**
- * Verifica si la cola está vacía.
- * 
- * @param q Referencia a la cola que se desea verificar.
- * @return `true` si la cola está vacía, `false` si no lo está. 
- * @details Esta función comprueba si la cola no contiene elementos. Es útil para evitar operaciones
- *          como `queue_dequeue` en una cola vacía.
- */
-bool queue_is_empty(Queue* q){
-
+//Verifica si la cola está vacía.
+bool queue_is_empty(Queue* q) {
+    return q->front == -1;
 }
 
-/**
- * Obtiene el elemento al frente de la cola sin eliminarlo.
- * 
- * @param q Referencia a la cola de la cual se desea obtener el elemento.
- * @return El dato que está al frente de la cola. Si la cola está vacía , devuelve un valor que indica error (por ejemplo, un valor predeterminado).
- * @details Esta función devuelve el elemento al frente de la cola sin modificarla.
- *          Si la cola está vacía, no se realiza ninguna operación y se devuelve un valor de error.
- */
+//Obtiene el elemento al frente de la cola sin eliminarlo.
 Data queue_front(Queue* q){
-
+  if (q->front == -1) {
+        // La cola está vacía
+        return -1; // Valor de error
+    }
+    return q->data[q->front];
 }
 
-/**
- * Vacía la cola, eliminando todos sus elementos.
- * 
- * @param q Referemcoa a la cola que se desea vaciar.
- * @details Esta función hace que los índices head y tail tomen el valor de -1
- */
+//Vacía la cola, eliminando todos sus elementos
 void queue_empty(Queue* q){
-
+  q->front = q->rear = -1; 
 }
 
-/**
- * Elimina la cola y libera la memoria asociada a ella.
- * 
- * @param q Referencia a la cola que se desea eliminar.
- * @details Esta función libera la memoria asignada dinámicamente para datos
- *          utilizando `free`. Es responsabilidad del llamante asegurarse de que la cola ya no se utiliza después
- *          de ser eliminada.
- */
+//Elimina la cola y libera la memoria asociada a ella.
 void queue_delete(Queue* q){
-
+   if (q) {
+        free(q->data); 
+        free(q);      
+    }
 }
