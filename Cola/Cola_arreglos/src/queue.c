@@ -58,7 +58,7 @@ Data queue_front(Queue* q) {
     return q->datos[q->head];
 }
 
-// Vacía la cola
+// Vacía la cola eliminando todos sus elementos
 void queue_empty(Queue* q) {
     q->head = -1;
     q->tail = -1;
